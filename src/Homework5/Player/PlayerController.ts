@@ -114,6 +114,14 @@ export default class PlayerController extends StateMachineAI {
     update(deltaT: number): void {
 		super.update(deltaT);
 
+        if (this.tilemap.getTileAtWorldPosition(this.owner.position.clone().add(new Vec2(0, 32))) == 8) {
+            // Fire the hit switch event
+            this.emitter.fireEvent(HW5_Events.PLAYER_HIT_SWITCH);
+
+            // Changes the tile from off to on
+            this.tilemap.setTileAtRowCol(this.tilemap.getColRowAt(this.owner.position.clone().add(new Vec2(0, 32))), 9);
+        }
+
 		if(this.currentState instanceof Jump){
 			Debug.log("playerstate", "Player State: Jump");
 		} else if (this.currentState instanceof Walk){
