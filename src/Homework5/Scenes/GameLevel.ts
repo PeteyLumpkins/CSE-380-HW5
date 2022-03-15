@@ -123,11 +123,17 @@ export default class GameLevel extends Scene {
                         let node = this.sceneGraph.getNode(event.data.get("node"));
                         let other = this.sceneGraph.getNode(event.data.get("other"));
 
+                        if (node === undefined || other === undefined) {
+                            break;
+                        }
+
                         if(node === this.player){
                             // Node is player, other is balloon
+                            console.log("Player hitting balloon");
                             this.handlePlayerBalloonCollision(<AnimatedSprite>node, <AnimatedSprite>other);
                         } else {
                             // Other is player, node is balloon
+                            console.log("Balloon hiittiing player");
                             this.handlePlayerBalloonCollision(<AnimatedSprite>other,<AnimatedSprite>node);
 
                         }
@@ -135,7 +141,9 @@ export default class GameLevel extends Scene {
                     break;
 
                 case HW5_Events.BALLOON_POPPED:
-                    {
+                    {   
+                        console.log("Popping balloon");
+                        console.log("Owner: " + event.data.get("owner"));
                         // An balloon collided with the player, destroy it and use the particle system
                         this.balloonsPopped++;
                         this.balloonLabel.text = "Balloons Left: " + (this.totalBalloons - this.balloonsPopped);
@@ -143,7 +151,7 @@ export default class GameLevel extends Scene {
                         
                         // Set mass based on color
                         let particleMass = 0;
-                        if ((<BalloonController>node._ai).color == HW5_Color.RED) {
+                        if ((<BalloonController>node.ai).color == HW5_Color.RED) {
                             particleMass = 1;
                         }
                         else if ((<BalloonController>node._ai).color == HW5_Color.GREEN) {
@@ -386,7 +394,7 @@ export default class GameLevel extends Scene {
         balloon.addPhysics();
         balloon.addAI(BalloonController, aiOptions);
         balloon.setGroup("balloon");
-
+        balloon.setTrigger("player", HW5_Events.PLAYER_HIT_BALLOON, null);
     }
 
     // HOMEWORK 5 - TODO
@@ -416,6 +424,31 @@ export default class GameLevel extends Scene {
      * 
      */
     protected handlePlayerBalloonCollision(player: AnimatedSprite, balloon: AnimatedSprite) {
+        let suitColor = (<PlayerController>player.ai).suitColor;
+        let balloonColor = (<BalloonController>balloon.ai).color;
+
+        // Decrease lives
+        if (suitColor !== balloonColor) {
+            this.incPlayerLife(-1);
+        }
+
+        // Set particle color
+        switch(balloonColor) {
+            case HW5_Color.RED: {
+                this.system.changeColor(Color.RED);
+                break;
+            }
+            case HW5_Color.GREEN: {
+                this.system.changeColor(Color.GREEN);
+                break;
+            }
+            case HW5_Color.BLUE: {
+                this.system.changeColor(Color.BLUE);
+                break;
+            }
+        }
+
+        this.emitter.fireEvent(HW5_Events.BALLOON_POPPED, {"owner": balloon.id});
     }
 
     /**

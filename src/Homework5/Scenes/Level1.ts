@@ -39,6 +39,7 @@ export default class Level1 extends GameLevel {
      */
     unloadScene(){
         // Keep resources - this is up to you
+
     }
 
     startScene(): void {
