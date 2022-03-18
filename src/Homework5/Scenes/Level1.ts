@@ -38,8 +38,13 @@ export default class Level1 extends GameLevel {
      * not a lot of load time for such a small project).
      */
     unloadScene(){
-        // Keep resources - this is up to you
-
+        this.load.keepSpritesheet("player");
+        this.load.keepSpritesheet("red");
+        this.load.keepSpritesheet("blue");
+        this.load.keepAudio("jump");
+        this.load.keepAudio("switch");
+        this.load.keepAudio("player_death");
+        this.load.keepAudio("level_music");
     }
 
     startScene(): void {

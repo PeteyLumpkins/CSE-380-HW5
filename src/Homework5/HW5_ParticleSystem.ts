@@ -20,7 +20,7 @@ import RandUtils from "../Wolfie2D/Utils/RandUtils";
 export default class HW5_ParticleSystem extends ParticleSystem {
 
     setParticleAnimation(particle: Particle) {
-        particle.vel = RandUtils.randVec(-50, 50, -100, 100);
+        particle.vel = RandUtils.randVec(-50, 50, 200*particle.mass, 100*particle.mass);
 
         particle.tweens.add("active", {
             startDelay: 0,
