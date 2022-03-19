@@ -142,8 +142,7 @@ export default class GameLevel extends Scene {
 
                 case HW5_Events.BALLOON_POPPED:
                     {   
-                        console.log("Popping balloon");
-                        console.log("Owner: " + event.data.get("owner"));
+                        
                         // An balloon collided with the player, destroy it and use the particle system
                         this.balloonsPopped++;
                         this.balloonLabel.text = "Balloons Left: " + (this.totalBalloons - this.balloonsPopped);
@@ -449,6 +448,7 @@ export default class GameLevel extends Scene {
         }
 
         this.emitter.fireEvent(HW5_Events.BALLOON_POPPED, {"owner": balloon.id});
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "balloon_pop"});
     }
 
     /**
